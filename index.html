@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gabo Ramos — Distrito 20</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  :root {
+    --bg: #012422;
+    --bg-alt: #072e2b;
+    --card: #0A3B35;
+    --lime: #C8C702;
+    --cream: #DECDB4;
+    --muted: #9C8E77;
+    --muted-2: #7A6F5C;
+    --line: rgba(222,205,180,0.15);
+    --r-sm: 3px;
+    --r-md: 6px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; max-width: 100%; }
+  html, body { overflow-x: hidden; overscroll-behavior-x: none; width: 100%; }
+  body {
+    background-color: var(--bg);
+    background-image: url("topo-bg.png");
+    background-size: cover;
+    background-position: center top;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    font-family: 'JetBrains Mono', monospace; color: var(--cream);
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding-left: 32px; padding-right: 32px; width: 100%; }
+  a { color: inherit; }
+
+  .stripe { height: 6px; background: repeating-linear-gradient(135deg, var(--lime) 0 10px, #05130f 10px 20px); }
+
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 32px; border-bottom: 1px solid var(--line);
+    position: sticky; top: 0; background: rgba(1,36,34,0.94); backdrop-filter: blur(6px); z-index: 20;
+  }
+  .logo { font-family: 'Anton', sans-serif; font-size: 20px; color: var(--lime); letter-spacing: 0.5px; }
+  .desktop-tabs { display: flex; gap: 22px; font-size: 10.5px; letter-spacing: 1px; }
+  .desktop-tabs a { color: var(--muted); padding-bottom: 4px; border-bottom: 2px solid transparent; text-decoration: none; transition: color 0.2s, border-color 0.2s; }
+  .desktop-tabs a:hover { color: var(--lime); border-bottom-color: var(--lime); }
+  .hamburger { display: none; width: 24px; height: 17px; flex-direction: column; justify-content: space-between; cursor: pointer; }
+  .hamburger span { height: 2px; background: var(--cream); border-radius: 2px; }
+  #mobile-menu { max-height: 0; overflow: hidden; background: var(--card); border-bottom: 1px solid var(--line); transition: max-height 0.3s ease; }
+  #mobile-menu.open { max-height: 360px; }
+  #mobile-menu-inner { padding: 8px 0 14px; }
+  #mobile-menu a { display: block; padding: 12px 4px; font-size: 12px; letter-spacing: 0.5px; text-decoration: none; color: var(--cream); border-top: 1px solid var(--line); transition: color 0.2s; }
+  #mobile-menu a:first-child { border-top: none; }
+  #mobile-menu a:active, #mobile-menu a:hover { color: var(--lime); }
+
+  section { padding: 60px 0; text-align: center; }
+  section.alt { background: rgba(7,46,43,0.55); }
+
+  .eyebrow { font-size: 10px; letter-spacing: 3px; color: var(--muted); margin-bottom: 10px; }
+
+  h1.brand {
+    font-family: 'Anton', sans-serif; font-size: 54px; line-height: 0.95; color: var(--lime);
+    letter-spacing: 0.5px; text-shadow: 0 0 36px rgba(200,199,2,0.22);
+  }
+  h2.section-title {
+    font-family: 'Anton', sans-serif; font-size: 30px; color: var(--cream);
+    letter-spacing: 0.5px; margin-bottom: 16px; text-align: center;
+  }
+  h2.section-title.lime { color: var(--lime); text-shadow: 0 0 28px rgba(200,199,2,0.2); }
+
+  .district-badge {
+    display: inline-block; border: 1.5px solid var(--lime); color: var(--lime); font-size: 11px;
+    letter-spacing: 2px; padding: 6px 14px; border-radius: var(--r-sm); margin-bottom: 14px;
+  }
+
+  .hero { display: flex; align-items: center; gap: 44px; flex-wrap: wrap; justify-content: center; padding-top: 16px; }
+  .hero-text { flex: 1; min-width: 280px; text-align: center; }
+  .hero-photo-frame { width: 420px; flex-shrink: 0; margin: 0 auto; position: relative; padding: 10px; }
+  .hero-photo-frame::before, .hero-photo-frame::after { content: ""; position: absolute; width: 30px; height: 30px; border: 2px solid var(--lime); }
+  .hero-photo-frame::before { top: 0; left: 0; border-right: none; border-bottom: none; }
+  .hero-photo-frame::after { bottom: 0; right: 0; border-left: none; border-top: none; }
+  .hero-photo-frame img { width: 100%; display: block; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.45)); }
+
+  .tagline { font-size: 15px; color: var(--cream); margin-top: 14px; font-weight: 700; letter-spacing: 0.2px; max-width: 460px; margin-left: auto; margin-right: auto; line-height: 1.5; }
+  .body-text { font-size: 12px; color: var(--muted); margin: 12px auto 0; max-width: 420px; line-height: 1.8; text-align: center; }
+  .badge { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; border: 1.5px solid var(--cream); border-radius: var(--r-sm); padding: 9px 16px; font-size: 11px; color: var(--cream); letter-spacing: 0.8px; }
+  .btn-row { display: flex; gap: 14px; margin-top: 24px; flex-wrap: wrap; justify-content: center; }
+  .btn-primary, .btn-outline {
+    border-radius: var(--r-sm); padding: 13px 22px; font-weight: 700; font-size: 11px; letter-spacing: 0.8px;
+    cursor: pointer; border: none; font-family: 'JetBrains Mono', monospace; text-decoration: none;
+    display: inline-block; transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+  .btn-primary { background: var(--lime); color: var(--bg); box-shadow: 0 4px 16px rgba(200,199,2,0.22); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(200,199,2,0.35); }
+  .btn-outline { background: transparent; color: var(--cream); border: 1.5px solid var(--cream); }
+  .btn-outline:hover { transform: translateY(-2px); background: rgba(222,205,180,0.08); }
+
+  /* Distrito 20 / 26 barrios */
+  .ring-wrap { display: flex; justify-content: center; padding: 14px 0 10px; }
+  .ring-box { position: relative; width: 220px; height: 220px; }
+  .ring-box svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .ring-count { font-family: 'Anton', sans-serif; font-size: 50px; color: var(--lime); line-height: 1; }
+  .ring-label { font-size: 9px; letter-spacing: 1.5px; color: var(--cream); margin-top: 6px; text-align: center; max-width: 140px; }
+
+  .stop-card {
+    max-width: 460px; margin: 26px auto 0; background: var(--card); border: 1.5px solid var(--cream);
+    border-radius: var(--r-md); padding: 22px; text-align: center;
+  }
+  .stop-label { font-size: 10px; letter-spacing: 2px; color: var(--lime); margin-bottom: 12px; }
+  .stop-value { font-family: 'Anton', sans-serif; font-size: 22px; color: var(--cream); letter-spacing: 0.3px; }
+  .stop-fields { display: flex; justify-content: center; gap: 20px; margin-top: 12px; flex-wrap: wrap; }
+  .stop-field { font-size: 9px; letter-spacing: 1px; color: var(--muted); }
+
+  /* Encuentros */
+  .empty-box { margin: 18px auto 0; border: 1.5px dashed rgba(222,205,180,0.4); border-radius: var(--r-md); padding: 18px 20px; color: var(--muted-2); font-size: 11px; max-width: 460px; text-align: center; }
+
+  /* Lo que estoy escuchando */
+  .topics-intro { max-width: 520px; margin: 0 auto; font-size: 12px; color: var(--muted); line-height: 1.8; }
+  .topics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 680px; margin: 26px auto 0; }
+  .topic-card { border: 1.5px dashed rgba(222,205,180,0.35); border-radius: var(--r-md); padding: 16px 8px; font-size: 11px; letter-spacing: 0.3px; color: var(--cream); }
+
+  .bio-wrap { max-width: 640px; font-size: 13px; line-height: 1.9; color: var(--cream); margin: 0 auto; text-align: left; }
+  .bio-wrap strong { color: var(--lime); }
+  .tags-row { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 24px; justify-content: center; }
+  .tag { border: 1px solid rgba(222,205,180,0.35); color: var(--muted); font-size: 10px; padding: 6px 14px; border-radius: 16px; transition: border-color 0.2s, color 0.2s; text-decoration: none; }
+  .tag:hover { border-color: var(--lime); color: var(--lime); }
+
+  .contact-form, .newsletter-form {
+    max-width: 460px; background: var(--card); border: 1.5px solid var(--cream); border-radius: var(--r-md);
+    padding: 24px; margin: 20px auto 0; text-align: left; box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+  }
+  .contact-form label, .newsletter-form label { font-size: 10px; color: var(--muted); letter-spacing: 0.5px; }
+  .contact-form input, .contact-form textarea, .newsletter-form input {
+    width: 100%; box-sizing: border-box; background: var(--bg); border: 1px solid rgba(222,205,180,0.3);
+    border-radius: var(--r-sm); padding: 11px; color: var(--cream); font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; margin: 6px 0 16px; transition: border-color 0.2s;
+  }
+  .contact-form input:focus, .contact-form textarea:focus, .newsletter-form input:focus { outline: none; border-color: var(--lime); }
+  .consent { display: flex; align-items: flex-start; gap: 8px; font-size: 10px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+  .privacy-box { max-width: 460px; margin: 14px auto 0; background: var(--card); border: 1px solid rgba(222,205,180,0.3); border-radius: var(--r-md); padding: 18px 20px; text-align: left; }
+  .privacy-title { color: var(--lime); font-size: 10px; letter-spacing: 0.8px; font-weight: 700; margin-bottom: 10px; }
+  .privacy-body { color: var(--muted); font-size: 10px; line-height: 1.8; }
+  .form-note { font-size: 11px; color: var(--lime); text-align: center; margin-top: 12px; display: none; }
+
+  footer { border-top: 1px solid var(--line); padding: 26px 32px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; font-size: 11px; letter-spacing: 0.8px; align-items: center; }
+  footer a { text-decoration: none; transition: color 0.2s; }
+  footer a:hover { color: var(--lime); }
+  footer .accent { color: var(--lime); }
+  footer .muted { color: var(--muted); }
+  .footer-social { display: flex; gap: 18px; }
+  .barcode { height: 14px; width: 90px; background: repeating-linear-gradient(90deg, var(--muted) 0 2px, transparent 2px 5px); opacity: 0.6; }
+
+  @media (max-width: 760px) {
+    .wrap { padding-left: 18px; padding-right: 18px; }
+    nav { padding: 14px 18px; }
+    .desktop-tabs { display: none; }
+    .hamburger { display: flex; }
+    section { padding: 46px 0; }
+    .hero-photo-frame { width: 260px; }
+    .btn-row { flex-direction: column; align-items: stretch; }
+    h1.brand { font-size: 38px; }
+    h2.section-title { font-size: 25px; }
+    .ring-box { width: 180px; height: 180px; }
+    .ring-count { font-size: 42px; }
+    .topics-grid { grid-template-columns: repeat(2, 1fr); }
+    .bio-wrap { text-align: left; }
+    footer { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap" style="display:flex; align-items:center; justify-content:space-between; padding:0; width:100%;">
+    <div class="logo">GABO RAMOS</div>
+    <div class="desktop-tabs">
+      <a href="#inicio">INICIO</a>
+      <a href="#distrito-20">DISTRITO 20</a>
+      <a href="#encuentros">ENCUENTROS</a>
+      <a href="#sobre-mi">SOBRE MÍ</a>
+      <a href="#lo-que-escucho">LO QUE ESCUCHO</a>
+      <a href="#contacto">CONTACTO</a>
+    </div>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div id="mobile-menu">
+  <div id="mobile-menu-inner" class="wrap">
+    <a href="#inicio">INICIO</a>
+    <a href="#distrito-20">DISTRITO 20</a>
+    <a href="#encuentros">ENCUENTROS</a>
+    <a href="#sobre-mi">SOBRE MÍ</a>
+    <a href="#lo-que-escucho">LO QUE ESCUCHO</a>
+    <a href="#contacto">CONTACTO</a>
+  </div>
+</div>
+
+<section id="inicio" class="wrap">
+  <div class="hero">
+    <div class="hero-text">
+      <div class="district-badge">ARRIBA LOS DE ABAJO</div>
+      <h1 class="brand">GABO RAMOS</h1>
+      <div class="tagline">Hablando con la gente. Conociendo el Distrito 20 barrio por barrio.</div>
+      <div class="badge">CABO ROJO &middot; HORMIGUEROS &middot; SAN GERMÁN</div>
+      <div class="btn-row">
+        <a href="#distrito-20" class="btn-primary">CONOCE EL PROYECTO ↗</a>
+        <a href="#contacto" class="btn-outline">ENVÍA UN MENSAJE ↗</a>
+      </div>
+    </div>
+    <div class="hero-photo-frame"><img src="foto_para_banner.png" alt="Retrato de Gabo Ramos"></div>
+  </div>
+</section>
+
+<div class="stripe"></div>
+
+<section id="distrito-20" class="wrap">
+  <div class="eyebrow">DISTRITO 20</div>
+  <h2 class="section-title lime">26 BARRIOS. UN DISTRITO.</h2>
+  <div class="body-text">Cabo Rojo, Hormigueros y San Germán — un recorrido barrio por barrio para escuchar de cerca lo que vive cada comunidad.</div>
+
+  <div class="ring-wrap">
+    <div class="ring-box">
+      <svg viewBox="0 0 140 140">
+        <circle cx="70" cy="70" r="60" fill="none" stroke="rgba(222,205,180,0.15)" stroke-width="10" />
+        <circle id="ring-fill" cx="70" cy="70" r="60" fill="none" stroke="#C8C702" stroke-width="10"
+          stroke-linecap="round" stroke-dasharray="376.99" stroke-dashoffset="376.99" />
+      </svg>
+      <div class="ring-center">
+        <div class="ring-count" id="counter-big">0/26</div>
+        <div class="ring-label">BARRIOS VISITADOS</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stop-card">
+    <div class="stop-label">PRÓXIMA PARADA</div>
+    <div class="stop-value">Próximamente</div>
+    <div class="stop-fields">
+      <span class="stop-field">BARRIO</span>
+      <span class="stop-field">MUNICIPIO</span>
+      <span class="stop-field">FECHA</span>
+    </div>
+  </div>
+</section>
+
+<section id="encuentros" class="wrap alt">
+  <div class="eyebrow">COMUNIDAD</div>
+  <h2 class="section-title">ENCUENTROS</h2>
+  <div class="body-text">Fechas, lugares y reseñas de cada encuentro con las comunidades del distrito — a medida que se vayan confirmando.</div>
+  <div class="empty-box">Próximamente se publicarán aquí los primeros encuentros.</div>
+</section>
+
+<section id="lo-que-escucho" class="wrap">
+  <div class="eyebrow">VOCES DEL DISTRITO</div>
+  <h2 class="section-title">LO QUE ESTOY ESCUCHANDO</h2>
+  <div class="topics-intro">Temas que van surgiendo en las conversaciones con cada comunidad.</div>
+  <div class="topics-grid">
+    <div class="topic-card">AGUA</div>
+    <div class="topic-card">PEQUEÑOS NEGOCIOS</div>
+    <div class="topic-card">ENVEJECIENTES</div>
+    <div class="topic-card">AMBIENTE</div>
+    <div class="topic-card">EDUCACIÓN</div>
+    <div class="topic-card">DEPORTE</div>
+    <div class="topic-card">TRANSPORTACIÓN</div>
+    <div class="topic-card">SERVICIOS PÚBLICOS</div>
+    <div class="topic-card">SALUD</div>
+    <div class="topic-card">AGRICULTURA</div>
+  </div>
+</section>
+
+<div class="stripe"></div>
+
+<section id="sobre-mi" class="wrap alt">
+  <div class="eyebrow">DOCUMENTALISTA · CABO ROJO, PR</div>
+  <h2 class="section-title">SOBRE MÍ</h2>
+  <div class="bio-wrap">
+    Soy Gabo Ramos y soy caborrojeño. Mi trayectoria ha estado ligada al arte, la comunicación y el compromiso con Puerto Rico — como documentalista, director creativo y comunicador. He trabajado en medios, publicidad y televisión, y durante varios años también trabajé en producción audiovisual y contenido para artistas como Kany García.
+    <br><br>
+    Hoy impulso proyectos como el documental <strong>La Esencia del Conflicto</strong> y promuevo la fiscalización y el análisis de la cultura política desde mi plataforma <strong>Somos Puertorro</strong> y mi podcast <strong>La Contraparte</strong>. Con una mirada crítica e independiente, busco acercar información clara y balanceada sobre la actualidad del archipiélago, abrir espacio a distintas voces y aportar a una ciudadanía informada y participativa.
+  </div>
+  <div class="tags-row">
+    <span class="tag">DOCUMENTALISTA</span>
+    <span class="tag">DIRECTOR CREATIVO</span>
+    <span class="tag">LA ESENCIA DEL CONFLICTO</span>
+    <span class="tag">SOMOS PUERTORRO</span>
+    <span class="tag">LA CONTRAPARTE</span>
+  </div>
+</section>
+
+<section id="contacto" class="wrap">
+  <div class="eyebrow">HABLEMOS</div>
+  <h2 class="section-title">ENVÍA UN MENSAJE</h2>
+  <div class="body-text">Puedes utilizar este espacio para enviar una pregunta, una observación o una solicitud de contacto. Describe brevemente el asunto y, si deseas respuesta, deja un correo electrónico.</div>
+
+  <div class="tags-row" style="margin-top:20px;">
+    <a href="https://www.instagram.com/gaboramospr/" target="_blank" class="tag">INSTAGRAM ↗</a>
+    <a href="https://www.facebook.com/OriginalPuertorro" target="_blank" class="tag">FACEBOOK ↗</a>
+  </div>
+
+  <form class="contact-form" id="contact-form">
+    <label>NOMBRE (OPCIONAL)</label>
+    <input type="text" name="nombre">
+    <label>CORREO ELECTRÓNICO (OPCIONAL)</label>
+    <input type="email" name="correo">
+    <label>MENSAJE *</label>
+    <textarea rows="4" name="mensaje" required></textarea>
+    <div style="color:var(--muted-2); font-size:9px; line-height:1.5; margin-bottom:16px;">Evita incluir números de identificación, información médica u otros datos sensibles.</div>
+    <label class="consent"><input type="checkbox" required style="margin-top:2px; width:auto;"> He leído el aviso de privacidad y acepto el envío de este mensaje.</label>
+    <button type="submit" class="btn-primary" style="width:100%;">ENVIAR MENSAJE</button>
+    <div class="form-note" id="contact-note">Tu mensaje se ha enviado correctamente.</div>
+  </form>
+
+  <div class="privacy-box">
+    <div class="privacy-title">AVISO DE PRIVACIDAD</div>
+    <div class="privacy-body">
+      Los mensajes enviados a través de este formulario son administrados directamente por Gabo Ramos.<br>
+      Se utilizarán únicamente para atender la comunicación y se conservarán durante el tiempo necesario para ese propósito.
+    </div>
+  </div>
+</section>
+
+<section id="newsletter" class="wrap alt">
+  <div class="eyebrow">NO TE PIERDAS NADA</div>
+  <h2 class="section-title">BOLETÍN</h2>
+  <div class="body-text">Recibe por correo las novedades que se publiquen en esta página.</div>
+  <form class="newsletter-form" id="newsletter-form">
+    <label>CORREO ELECTRÓNICO</label>
+    <input type="email" name="correo" required>
+    <label class="consent"><input type="checkbox" required style="margin-top:2px; width:auto;"> Quiero recibir novedades por correo electrónico. Podré cancelar la suscripción cuando lo desee.</label>
+    <button type="submit" class="btn-primary" style="width:100%;">SUSCRIBIRME</button>
+    <div class="form-note" id="newsletter-note">Listo — quedaste suscrito.</div>
+  </form>
+</section>
+
+<footer class="wrap">
+  <div class="muted">ARRIBA LOS DE ABAJO</div>
+  <div class="footer-social">
+    <a href="https://www.instagram.com/gaboramospr/" target="_blank" class="muted">INSTAGRAM</a>
+    <a href="https://www.facebook.com/OriginalPuertorro" target="_blank" class="muted">FACEBOOK</a>
+  </div>
+  <div class="barcode"></div>
+  <div class="accent">GABORAMOSPR.COM</div>
+</footer>
+
+<script>
+document.getElementById('hamburger').addEventListener('click', function () {
+  document.getElementById('mobile-menu').classList.toggle('open');
+});
+document.querySelectorAll('#mobile-menu a').forEach(function (a) {
+  a.addEventListener('click', function () { document.getElementById('mobile-menu').classList.remove('open'); });
+});
+
+// NOTA: estos formularios están listos para conectarse a un servicio de envío
+// (ej. Supabase + función de correo, Formspree, etc.). Por ahora solo simulan
+// el envío en el navegador — no hay backend configurado todavía.
+document.getElementById('contact-form').addEventListener('submit', function (e) {
+  e.preventDefault();
+  document.getElementById('contact-note').style.display = 'block';
+  this.reset();
+});
+document.getElementById('newsletter-form').addEventListener('submit', function (e) {
+  e.preventDefault();
+  document.getElementById('newsletter-note').style.display = 'block';
+  this.reset();
+});
+
+// Distrito 20 — estado de la gira. Gabo lo actualiza según se completen las
+// visitas; no es editable desde la página pública.
+const TOTAL = 26;
+const completed = 0;
+const RADIUS = 60;
+const CIRC = 2 * Math.PI * RADIUS;
+document.getElementById('counter-big').textContent = completed + '/' + TOTAL;
+const offset = CIRC - (completed / TOTAL) * CIRC;
+document.getElementById('ring-fill').style.strokeDasharray = CIRC.toFixed(2);
+document.getElementById('ring-fill').style.strokeDashoffset = offset.toFixed(2);
+</script>
+</body>
+</html>
