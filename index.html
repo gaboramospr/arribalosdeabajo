@@ -388,7 +388,7 @@
 <section id="contacto" class="wrap">
   <div class="eyebrow">HABLEMOS</div>
   <h2 class="section-title">ENVÍA UN MENSAJE</h2>
-  <div class="body-text">Puedes utilizar este espacio para enviar una pregunta, una observación o una solicitud de contacto. Describe brevemente el asunto y, si deseas respuesta, deja un correo electrónico.</div>
+  <div class="body-text">Puedes utilizar este espacio para enviar una pregunta, una observación o una solicitud de contacto. Describe brevemente el asunto e incluye tu nombre y correo electrónico para que pueda responderte.</div>
 
   <div class="tags-row" style="margin-top:20px;">
     <a href="https://www.instagram.com/gaboramospr/" target="_blank" rel="noopener" class="tag">INSTAGRAM ↗︎</a>
@@ -396,16 +396,21 @@
   </div>
 
   <form class="contact-form" id="contact-form">
-    <label for="f-nombre">NOMBRE (OPCIONAL)</label>
-    <input type="text" id="f-nombre" name="nombre">
-    <label for="f-correo">CORREO ELECTRÓNICO (OPCIONAL)</label>
-    <input type="email" id="f-correo" name="correo">
+    <input type="hidden" name="access_key" value="53a41ae8-2db4-46d9-8214-b6b105b8bc6c">
+    <input type="hidden" name="subject" value="Nuevo mensaje desde gaboramospr.com">
+    <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+    <label for="f-nombre">NOMBRE *</label>
+    <input type="text" id="f-nombre" name="nombre" required aria-required="true">
+    <label for="f-correo">CORREO ELECTRÓNICO *</label>
+    <input type="email" id="f-correo" name="email" required aria-required="true">
+    <label for="f-telefono">TELÉFONO (OPCIONAL)</label>
+    <input type="tel" id="f-telefono" name="telefono">
     <label for="f-mensaje">MENSAJE *</label>
     <textarea rows="4" id="f-mensaje" name="mensaje" required aria-required="true"></textarea>
     <div style="color:var(--muted); font-size:9px; line-height:1.5; margin-bottom:16px;">Evita incluir números de identificación, información médica u otros datos sensibles.</div>
     <label class="consent" for="f-consent"><input type="checkbox" id="f-consent" required> He leído el aviso de privacidad y acepto el envío de este mensaje.</label>
-    <button type="submit" class="btn-primary" style="width:100%;">ENVIAR MENSAJE</button>
-    <div class="form-note" id="contact-note">Este formulario todavía está en desarrollo. Pronto podrás enviar tu mensaje directamente desde aquí.</div>
+    <button type="submit" class="btn-primary" style="width:100%;" id="contact-submit">ENVIAR MENSAJE</button>
+    <div class="form-note" id="contact-note"></div>
   </form>
 
   <div class="privacy-box">
@@ -421,12 +426,11 @@
   <div class="eyebrow">NO TE PIERDAS NADA</div>
   <h2 class="section-title">BOLETÍN</h2>
   <div class="body-text">Recibe por correo las novedades que se publiquen en esta página.</div>
-  <form class="newsletter-form" id="newsletter-form">
+  <form class="newsletter-form" id="newsletter-form" action="https://app.kit.com/forms/9918589/subscriptions" method="post">
     <label for="n-correo">CORREO ELECTRÓNICO</label>
-    <input type="email" id="n-correo" name="correo" required aria-required="true">
+    <input type="email" id="n-correo" name="email_address" required aria-required="true">
     <label class="consent" for="n-consent"><input type="checkbox" id="n-consent" required> Quiero recibir novedades por correo electrónico. Podré cancelar la suscripción cuando lo desee.</label>
     <button type="submit" class="btn-primary" style="width:100%;">SUSCRIBIRME</button>
-    <div class="form-note" id="newsletter-note">Este formulario todavía está en desarrollo. Pronto podrás suscribirte directamente desde aquí.</div>
   </form>
 </section>
 </main>
@@ -455,17 +459,46 @@ document.querySelectorAll('#mobile-menu a').forEach(function (a) {
   });
 });
 
-// NOTA: estos formularios no tienen backend todavia. Mientras no exista uno
-// real, se indica claramente que están en desarrollo — nunca se simula un
-// envío exitoso.
+// El formulario de contacto ya está conectado a Web3Forms (envía a
+// gramosvel@gmail.com). El boletín todavía no tiene servicio conectado.
 document.getElementById('contact-form').addEventListener('submit', function (e) {
   e.preventDefault();
-  document.getElementById('contact-note').style.display = 'block';
+  var form = e.target;
+  var note = document.getElementById('contact-note');
+  var btn = document.getElementById('contact-submit');
+  var data = new FormData(form);
+  var payload = Object.fromEntries(data);
+  btn.disabled = true;
+  btn.textContent = 'ENVIANDO...';
+  fetch('https://api.web3forms.com/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+    .then(function (res) { return res.json(); })
+    .then(function (result) {
+      btn.disabled = false;
+      btn.textContent = 'ENVIAR MENSAJE';
+      note.style.color = 'var(--lime)';
+      if (result.success) {
+        note.textContent = 'Tu mensaje se ha enviado correctamente.';
+        form.reset();
+      } else {
+        note.style.color = 'var(--cream)';
+        note.textContent = 'No se pudo enviar el mensaje. Inténtalo de nuevo más tarde.';
+      }
+      note.style.display = 'block';
+    })
+    .catch(function () {
+      btn.disabled = false;
+      btn.textContent = 'ENVIAR MENSAJE';
+      note.style.color = 'var(--cream)';
+      note.textContent = 'No se pudo enviar el mensaje. Inténtalo de nuevo más tarde.';
+      note.style.display = 'block';
+    });
 });
-document.getElementById('newsletter-form').addEventListener('submit', function (e) {
-  e.preventDefault();
-  document.getElementById('newsletter-note').style.display = 'block';
-});
+// El boletín ya está conectado a Kit (antes ConvertKit) — envío normal del
+// formulario, sin JS. Kit se encarga de la confirmación por correo.
 
 // Distrito 20 — estado de la gira. Gabo lo actualiza según se completen las
 // visitas; no es editable desde la página pública.
