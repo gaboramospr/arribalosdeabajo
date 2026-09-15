@@ -99,8 +99,8 @@
   .hamburger span { height: 2px; background: var(--cream); border-radius: 1px; }
   #mobile-menu { max-height: 0; overflow: hidden; background: var(--card); border-bottom: 1px solid var(--line); transition: max-height 0.3s ease; }
   #mobile-menu.open { max-height: 360px; }
-  #mobile-menu-inner { padding: 8px 0 14px; }
-  #mobile-menu a { display: block; padding: 12px 4px; font-size: 13px; font-weight: 600; letter-spacing: 0.4px; text-decoration: none; color: var(--cream); border-top: 1px solid var(--line); transition: color 0.2s; }
+  #mobile-menu-inner { padding-top: 8px; padding-bottom: 14px; }
+  #mobile-menu a { display: block; padding: 12px 14px; font-size: 13px; font-weight: 600; letter-spacing: 0.4px; text-decoration: none; color: var(--cream); border-top: 1px solid var(--line); transition: color 0.2s; }
   #mobile-menu a:first-child { border-top: none; }
   #mobile-menu a:active, #mobile-menu a:hover { color: var(--lime); }
 
@@ -227,6 +227,22 @@
   .footer-social { display: flex; gap: 18px; }
   .barcode { height: 14px; width: 90px; background: repeating-linear-gradient(90deg, var(--muted) 0 2px, transparent 2px 5px); opacity: 0.6; }
 
+  #back-to-top {
+    position: fixed; right: 16px; bottom: 20px; z-index: 30;
+    width: 28px; height: 28px;
+    border: 1.5px solid var(--lime); border-radius: var(--r-sm);
+    background: rgba(1,36,34,0.65);
+    color: var(--lime); opacity: 0.55;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: opacity 0.2s ease;
+  }
+  #back-to-top svg { width: 16px; height: 16px; }
+  #back-to-top:hover, #back-to-top:focus-visible { opacity: 1; }
+  @media (max-width: 760px) {
+    #back-to-top { width: 26px; height: 26px; right: 12px; bottom: 16px; }
+    #back-to-top svg { width: 15px; height: 15px; }
+  }
+
   @media (max-width: 760px) {
     .wrap { padding-left: 18px; padding-right: 18px; }
     nav { padding: 14px 18px; }
@@ -282,7 +298,7 @@
       <div class="tagline">Hablando con la gente. Escuchando el Distrito 20 barrio por barrio.</div>
       <div class="badge">CABO ROJO &middot; HORMIGUEROS &middot; SAN GERMÁN</div>
       <div class="btn-row">
-        <a href="#distrito-20" class="btn-primary">¿20 PA' LA RUTA? <span class="arrow">↗︎</span></a>
+        <a href="#distrito-20" class="btn-primary">20 PA' LA RUTA <span class="arrow">↗︎</span></a>
         <a href="#contacto" class="btn-outline">ENVÍA UN MENSAJE <span class="arrow">↗︎</span></a>
       </div>
     </div>
@@ -451,6 +467,10 @@
   <div class="accent">GABORAMOSPR.COM</div>
 </footer>
 
+<button id="back-to-top" type="button" aria-label="Volver arriba">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
+</button>
+
 <script>
 var hamburger = document.getElementById('hamburger');
 var mobileMenu = document.getElementById('mobile-menu');
@@ -503,6 +523,10 @@ document.getElementById('contact-form').addEventListener('submit', function (e) 
       note.style.display = 'block';
     });
 });
+document.getElementById('back-to-top').addEventListener('click', function () {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
 // El boletín ya está conectado a Kit (antes ConvertKit) — envío normal del
 // formulario. Kit redirige de vuelta aquí con ?suscrito=1 tras confirmarse
 // (configurado en el panel de Kit), y esto muestra el mensaje de gracias.
