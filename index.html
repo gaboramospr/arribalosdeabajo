@@ -164,7 +164,7 @@
     border-radius: var(--r-md); padding: 22px; text-align: center;
   }
   .stop-label { font-family: var(--text); font-size: 10px; font-weight: 700; letter-spacing: 2px; color: var(--lime); margin-bottom: 12px; }
-  .stop-value { font-family: var(--display); font-size: 26px; color: var(--cream); letter-spacing: 0.3px; text-transform: uppercase; }
+  .stop-value { font-family: var(--display); font-size: 26px; line-height: 1.15; color: var(--cream); letter-spacing: 0.3px; text-transform: uppercase; }
   .stop-fields { display: flex; justify-content: center; gap: 20px; margin-top: 12px; flex-wrap: wrap; }
   .stop-field { font-family: var(--text); font-size: 9.5px; font-weight: 600; letter-spacing: 1px; color: var(--muted); }
 
@@ -251,7 +251,7 @@
     <div class="wrap" style="display:flex; align-items:center; justify-content:space-between; padding:0; width:100%;">
       <a href="#" class="logo">GABO RAMOS</a>
       <div class="desktop-tabs">
-        <a href="#distrito-20">RUTA 20</a>
+        <a href="#distrito-20">20 PA' LA RUTA</a>
         <a href="#encuentros">ENCUENTROS</a>
         <a href="#lo-que-escucho">LO QUE ESCUCHO</a>
         <a href="#sobre-mi">SOBRE MÍ</a>
@@ -264,7 +264,7 @@
   </nav>
   <div id="mobile-menu">
     <div id="mobile-menu-inner" class="wrap">
-      <a href="#distrito-20">RUTA 20</a>
+      <a href="#distrito-20">20 PA' LA RUTA</a>
       <a href="#encuentros">ENCUENTROS</a>
       <a href="#lo-que-escucho">LO QUE ESCUCHO</a>
       <a href="#sobre-mi">SOBRE MÍ</a>
@@ -282,7 +282,7 @@
       <div class="tagline">Hablando con la gente. Escuchando el Distrito 20 barrio por barrio.</div>
       <div class="badge">CABO ROJO &middot; HORMIGUEROS &middot; SAN GERMÁN</div>
       <div class="btn-row">
-        <a href="#distrito-20" class="btn-primary">CONOCE EL PROYECTO <span class="arrow">↗︎</span></a>
+        <a href="#distrito-20" class="btn-primary">¿20 PA' LA RUTA? <span class="arrow">↗︎</span></a>
         <a href="#contacto" class="btn-outline">ENVÍA UN MENSAJE <span class="arrow">↗︎</span></a>
       </div>
     </div>
@@ -293,9 +293,10 @@
 <div class="stripe"></div>
 
 <section id="distrito-20" class="wrap">
-  <div class="eyebrow">RUTA 20</div>
-  <h2 class="section-title lime">26 BARRIOS.<br>UN DISTRITO.</h2>
-  <div class="body-text"><strong>RUTA 20</strong> es un recorrido por los 26 barrios de Cabo Rojo, Hormigueros y San Germán para escuchar directamente a sus comunidades, conocer sus necesidades y documentar sus realidades. Barrio por barrio, escuchando antes de proponer.</div>
+  <div class="eyebrow">DISTRITO 20</div>
+  <h2 class="section-title lime">20<br>PA' LA RUTA</h2>
+  <div class="body-text">26 barrios. Tres pueblos. Una ruta para escuchar al Distrito 20.</div>
+  <div class="badge">CABO ROJO &middot; HORMIGUEROS &middot; SAN GERMÁN</div>
 
   <div class="ring-wrap">
     <div class="ring-box">
@@ -306,27 +307,31 @@
       </svg>
       <div class="ring-center">
         <div class="ring-count" id="counter-big">0/26</div>
-        <div class="ring-label">BARRIOS VISITADOS</div>
+        <div class="ring-label">BARRIOS EN LA RUTA</div>
       </div>
     </div>
   </div>
 
   <div class="stop-card">
-    <div class="stop-label">PRÓXIMA PARADA</div>
-    <div class="stop-value">Próximamente</div>
-    <div class="stop-fields">
-      <span class="stop-field">BARRIO</span>
+    <div class="stop-label">¿CUÁL ES LA RUTA?</div>
+    <div class="stop-value" id="ruta-status">PRÓXIMA RUTA<br>POR ANUNCIAR</div>
+    <div class="stop-fields" id="ruta-fields">
       <span class="stop-field">MUNICIPIO</span>
+      <span class="stop-field">BARRIOS</span>
       <span class="stop-field">FECHA</span>
     </div>
+  </div>
+
+  <div class="btn-row">
+    <a href="https://www.instagram.com/gaboramospr/" target="_blank" rel="noopener" class="btn-outline">VENTE PA' LA RUTA <span class="arrow">→</span></a>
   </div>
 </section>
 
 <section id="encuentros" class="wrap alt">
-  <div class="eyebrow">COMUNIDAD</div>
+  <div class="eyebrow">ENCUENTRO</div>
   <h2 class="section-title">ENCUENTROS</h2>
-  <div class="body-text">Fechas, lugares y reseñas de cada encuentro con las comunidades del distrito, a medida que se vayan confirmando.</div>
-  <div class="empty-box">Próximamente se publicarán aquí los primeros encuentros.</div>
+  <div class="body-text">Cada parada tiene su fecha, su lugar y su reseña, a medida que nos vayamos encontrando barrio por barrio.</div>
+  <div class="empty-box">Todavía no hay encuentros confirmados. La próxima parada se anuncia arriba, en "¿Cuál es la ruta?".</div>
 </section>
 
 <section id="lo-que-escucho" class="wrap">
@@ -431,6 +436,7 @@
     <input type="email" id="n-correo" name="email_address" required aria-required="true">
     <label class="consent" for="n-consent"><input type="checkbox" id="n-consent" required> Quiero recibir novedades por correo electrónico. Podré cancelar la suscripción cuando lo desee.</label>
     <button type="submit" class="btn-primary" style="width:100%;">SUSCRIBIRME</button>
+    <div class="form-note" id="newsletter-note">¡Gracias! Ya estás en la lista — revisa tu correo para confirmar tu suscripción.</div>
   </form>
 </section>
 </main>
@@ -498,7 +504,43 @@ document.getElementById('contact-form').addEventListener('submit', function (e) 
     });
 });
 // El boletín ya está conectado a Kit (antes ConvertKit) — envío normal del
-// formulario, sin JS. Kit se encarga de la confirmación por correo.
+// formulario. Kit redirige de vuelta aquí con ?suscrito=1 tras confirmarse
+// (configurado en el panel de Kit), y esto muestra el mensaje de gracias.
+if (new URLSearchParams(window.location.search).get('suscrito') === '1') {
+  document.getElementById('newsletter-note').style.display = 'block';
+  document.getElementById('newsletter').scrollIntoView({ block: 'center' });
+  var cleanUrl = window.location.pathname + window.location.hash;
+  window.history.replaceState({}, '', cleanUrl);
+}
+
+// 20 PA' LA RUTA — estado de la ruta actual. Para actualizar cuando se
+// confirme la próxima parada, edita este objeto únicamente (no hace falta
+// tocar el HTML en ningún otro lado).
+var RUTA_ACTUAL = {
+  anunciada: false,
+  municipio: '',
+  barrios: [],       // ej: ['Bajura', 'Boquerón', 'Pedernales']
+  fecha: '',
+  horaYPunto: ''
+};
+
+(function renderRuta() {
+  var statusEl = document.getElementById('ruta-status');
+  var fieldsEl = document.getElementById('ruta-fields');
+  if (!RUTA_ACTUAL.anunciada) {
+    statusEl.innerHTML = 'PRÓXIMA RUTA<br>POR ANUNCIAR';
+    fieldsEl.innerHTML =
+      '<span class="stop-field">MUNICIPIO</span>' +
+      '<span class="stop-field">BARRIOS</span>' +
+      '<span class="stop-field">FECHA</span>';
+    return;
+  }
+  statusEl.innerHTML = RUTA_ACTUAL.municipio;
+  fieldsEl.innerHTML =
+    '<span class="stop-field">' + RUTA_ACTUAL.barrios.join(' &rarr; ') + '</span>' +
+    '<span class="stop-field">' + RUTA_ACTUAL.fecha + '</span>' +
+    '<span class="stop-field">' + RUTA_ACTUAL.horaYPunto + '</span>';
+})();
 
 // Distrito 20 — estado de la gira. Gabo lo actualiza según se completen las
 // visitas; no es editable desde la página pública.
