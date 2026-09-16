@@ -153,8 +153,37 @@
 
   /* Distrito 20 / 26 barrios */
   .ring-wrap { display: flex; justify-content: center; padding: 14px 0 10px; }
+
+  /* Mapa del Distrito 20 */
+  .map-wrap { max-width: 100%; margin: 34px 0 8px; text-align: center; }
+  .map-wrap img { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+  .map-wrap .btn-outline { margin-top: 20px; }
+  .map-hint { font-family: var(--text); font-size: 10px; color: #F2E5D4; opacity: 0.65; margin-top: 10px; }
+
+  .map-modal {
+    position: fixed; inset: 0; z-index: 100; background: rgba(1,36,34,0.97);
+    display: flex; flex-direction: column;
+  }
+  .map-modal[hidden] { display: none; }
+  .map-modal-toolbar { display: flex; justify-content: flex-end; gap: 8px; padding: 14px 16px; flex-shrink: 0; }
+  .map-modal-toolbar button {
+    width: 42px; height: 42px; border: 1.5px solid var(--lime); background: rgba(10,59,53,0.85);
+    color: var(--lime); font-family: var(--display); font-size: 18px; border-radius: var(--r-sm);
+    cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1;
+  }
+  .map-modal-toolbar button:hover, .map-modal-toolbar button:focus-visible { background: var(--lime); color: var(--bg); }
+  .map-modal-stage {
+    flex: 1; overflow: hidden; position: relative; touch-action: none; cursor: grab;
+  }
+  .map-modal-stage.dragging { cursor: grabbing; }
+  .map-modal-stage img {
+    position: absolute; top: 50%; left: 50%; max-width: none; width: 90vw;
+    transform: translate(-50%, -50%); transform-origin: center center;
+    user-select: none; -webkit-user-drag: none; pointer-events: none;
+  }
   .ring-box { position: relative; width: 220px; height: 220px; }
   .ring-box svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  #ring-fill { transition: stroke-dashoffset 1.4s ease-out; }
   .ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
   .ring-count { font-family: var(--display); font-size: clamp(2.6rem, 6vw, 3.8rem); color: var(--lime); line-height: 1; }
   .ring-label { font-family: var(--text); font-size: 10px; font-weight: 600; letter-spacing: 1.5px; color: var(--cream); margin-top: 8px; text-align: center; max-width: 140px; }
@@ -166,6 +195,12 @@
   .stop-label { font-family: var(--text); font-size: 10px; font-weight: 700; letter-spacing: 2px; color: var(--lime); margin-bottom: 12px; }
   .stop-value { font-family: var(--display); font-size: 26px; line-height: 1.15; color: var(--cream); letter-spacing: 0.3px; text-transform: uppercase; }
   .stop-fields { display: flex; justify-content: center; gap: 20px; margin-top: 12px; flex-wrap: wrap; }
+  #ruta-cta a {
+    display: inline-block; margin-top: 18px; font-family: var(--display); font-size: 15px;
+    color: var(--lime); text-decoration: none; text-transform: uppercase; letter-spacing: 0.3px;
+  }
+  #ruta-cta a .arrow { display: inline-block; transition: transform 0.2s ease; }
+  #ruta-cta a:hover .arrow { transform: translateX(3px); }
   .stop-field { font-family: var(--text); font-size: 9.5px; font-weight: 600; letter-spacing: 1px; color: var(--muted); }
 
   /* Encuentros */
@@ -295,7 +330,7 @@
     <div class="hero-text">
       <div class="district-badge">ARRIBA LOS DE ABAJO</div>
       <h1 class="brand">GABO<br>RAMOS</h1>
-      <div class="tagline">Hablando con la gente. Escuchando el Distrito 20 barrio por barrio.</div>
+      <div class="tagline">Hablando con la gente. Escuchando el Distrito 20, barrio por barrio.</div>
       <div class="badge">CABO ROJO &middot; HORMIGUEROS &middot; SAN GERMÁN</div>
       <div class="btn-row">
         <a href="#distrito-20" class="btn-primary">20 PA' LA RUTA <span class="arrow">↗︎</span></a>
@@ -313,6 +348,12 @@
   <h2 class="section-title lime">20<br>PA' LA RUTA</h2>
   <div class="body-text">26 barrios. Tres pueblos. Una ruta para escuchar al Distrito 20.</div>
   <div class="badge">CABO ROJO &middot; HORMIGUEROS &middot; SAN GERMÁN</div>
+
+  <div class="map-wrap">
+    <img src="mapa-distrito20.webp" alt="Mapa del Distrito Representativo 20 con los barrios de Cabo Rojo, Hormigueros y la parte correspondiente de San Germán." width="1800" height="1164" loading="lazy">
+    <button type="button" id="map-open" class="btn-outline">Ampliar mapa</button>
+    <div class="map-hint">Amplía el mapa para ver los barrios.</div>
+  </div>
 
   <div class="ring-wrap">
     <div class="ring-box">
@@ -336,6 +377,7 @@
       <span class="stop-field">BARRIOS</span>
       <span class="stop-field">FECHA</span>
     </div>
+    <div id="ruta-cta"></div>
   </div>
 
   <div class="btn-row">
@@ -346,8 +388,8 @@
 <section id="encuentros" class="wrap alt">
   <div class="eyebrow">ENCUENTRO</div>
   <h2 class="section-title">ENCUENTROS</h2>
-  <div class="body-text">Cada parada tiene su fecha, su lugar y su reseña, a medida que nos vayamos encontrando barrio por barrio.</div>
-  <div class="empty-box">Todavía no hay encuentros confirmados. La próxima parada se anuncia arriba, en "¿Cuál es la ruta?".</div>
+  <div class="body-text">Cada parada es una oportunidad para encontrarnos, hablar y escuchar lo que está pasando en cada comunidad.</div>
+  <div class="empty-box">La primera ruta se anunciará próximamente.</div>
 </section>
 
 <section id="lo-que-escucho" class="wrap">
@@ -375,7 +417,7 @@
   <div class="eyebrow">CABO ROJO &middot; HORMIGUEROS &middot; SAN GERMÁN</div>
   <h2 class="section-title lime">SOY GABO RAMOS<br>Y SOY CABORROJEÑO.</h2>
   <div class="bio-wrap">
-    Soy Gabo Ramos y soy caborrojeño. Nací en Mayagüez y me crié en Cabo Rojo, el pueblo que formó gran parte de quien soy. Pero mi historia también está profundamente ligada a los otros dos pueblos que componen el Distrito 20. En Hormigueros cursé mis años de escuela superior, una etapa importante de mi formación. Y San Germán es el pueblo que escogí para formar mi hogar: aquí resido junto a mi esposa, Sujeily Ortiz, sangermeña, y aquí vimos nacer y crecer a nuestros dos hijos, Victoria y Álvaro.
+    Cabo Rojo es mi raíz, el pueblo que me vio crecer y que formó gran parte de quien soy. Pero mi historia también está ligada a los otros dos pueblos del Distrito 20: en Hormigueros viví años importantes de mi formación, y San Germán es el pueblo que escogí como mi hogar, donde vivo junto a mi esposa, Sujeily Ortiz, sangermeña, y donde vimos nacer y crecer a nuestros dos hijos, Victoria y Álvaro.
     <br><br>
     Mi trayectoria profesional ha estado ligada al arte, la comunicación y el compromiso con Puerto Rico. Soy documentalista, director creativo y comunicador, y durante más de una década he trabajado en producción audiovisual, publicidad, medios y creación de contenido.
     <br><br>
@@ -385,15 +427,15 @@
   <div class="pueblos-list">
     <div class="pueblo-item">
       <div class="pueblo-name">CABO ROJO</div>
-      <div class="pueblo-phrase">MI CASA.</div>
+      <div class="pueblo-phrase">MIS RAÍCES.</div>
     </div>
     <div class="pueblo-item">
       <div class="pueblo-name">HORMIGUEROS</div>
-      <div class="pueblo-phrase">FUE PARTE DE MI FORMACIÓN.</div>
+      <div class="pueblo-phrase">PARTE DE MI FORMACIÓN.</div>
     </div>
     <div class="pueblo-item">
       <div class="pueblo-name">SAN GERMÁN</div>
-      <div class="pueblo-phrase">SE CONVIRTIÓ EN MI HOGAR.</div>
+      <div class="pueblo-phrase">MI HOGAR.</div>
     </div>
   </div>
 
@@ -471,6 +513,18 @@
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
 </button>
 
+<div id="map-modal" class="map-modal" role="dialog" aria-modal="true" aria-label="Mapa del Distrito 20 ampliado" hidden>
+  <div class="map-modal-toolbar">
+    <button type="button" id="map-zoom-in" aria-label="Acercar">+</button>
+    <button type="button" id="map-zoom-out" aria-label="Alejar">&minus;</button>
+    <button type="button" id="map-zoom-reset" aria-label="Restablecer vista">1:1</button>
+    <button type="button" id="map-close" aria-label="Cerrar mapa">&times;</button>
+  </div>
+  <div class="map-modal-stage" id="map-stage">
+    <img id="map-full-img" src="" alt="Mapa del Distrito Representativo 20 con los barrios de Cabo Rojo, Hormigueros y la parte correspondiente de San Germán.">
+  </div>
+</div>
+
 <script>
 var hamburger = document.getElementById('hamburger');
 var mobileMenu = document.getElementById('mobile-menu');
@@ -527,6 +581,129 @@ document.getElementById('back-to-top').addEventListener('click', function () {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
+// Visor del mapa del Distrito 20 — zoom, desplazamiento y pellizco.
+(function () {
+  var openBtn = document.getElementById('map-open');
+  var modal = document.getElementById('map-modal');
+  var stage = document.getElementById('map-stage');
+  var img = document.getElementById('map-full-img');
+  var zoomInBtn = document.getElementById('map-zoom-in');
+  var zoomOutBtn = document.getElementById('map-zoom-out');
+  var resetBtn = document.getElementById('map-zoom-reset');
+  var closeBtn = document.getElementById('map-close');
+  var focusable = [zoomInBtn, zoomOutBtn, resetBtn, closeBtn];
+
+  var MIN_SCALE = 1, MAX_SCALE = 5;
+  var scale = 1, panX = 0, panY = 0;
+  var pointers = {};
+  var dragging = false, dragStart = null, pinchStartDist = null, pinchStartScale = 1;
+  var lastFocused = null;
+
+  function applyTransform() {
+    img.style.transform = 'translate(-50%, -50%) translate(' + panX + 'px, ' + panY + 'px) scale(' + scale + ')';
+  }
+
+  function clampPan() {
+    var maxPan = (scale - 1) * (stage.clientWidth / 2) + 40;
+    panX = Math.max(-maxPan, Math.min(maxPan, panX));
+    var maxPanY = (scale - 1) * (stage.clientHeight / 2) + 40;
+    panY = Math.max(-maxPanY, Math.min(maxPanY, panY));
+  }
+
+  function setScale(next) {
+    scale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, next));
+    if (scale === MIN_SCALE) { panX = 0; panY = 0; }
+    clampPan();
+    applyTransform();
+  }
+
+  function resetView() {
+    scale = 1; panX = 0; panY = 0;
+    applyTransform();
+  }
+
+  function openModal() {
+    lastFocused = document.activeElement;
+    img.src = 'mapa-distrito20-full.webp';
+    resetView();
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    closeBtn.focus();
+    document.addEventListener('keydown', onKeydown);
+  }
+
+  function closeModal() {
+    modal.hidden = true;
+    document.body.style.overflow = '';
+    document.removeEventListener('keydown', onKeydown);
+    if (lastFocused) lastFocused.focus();
+  }
+
+  function onKeydown(e) {
+    if (e.key === 'Escape') { closeModal(); return; }
+    if (e.key === 'Tab') {
+      var idx = focusable.indexOf(document.activeElement);
+      if (e.shiftKey) {
+        if (idx <= 0) { e.preventDefault(); focusable[focusable.length - 1].focus(); }
+      } else {
+        if (idx === focusable.length - 1 || idx === -1) { e.preventDefault(); focusable[0].focus(); }
+      }
+    }
+  }
+
+  openBtn.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
+  zoomInBtn.addEventListener('click', function () { setScale(scale * 1.4); });
+  zoomOutBtn.addEventListener('click', function () { setScale(scale / 1.4); });
+  resetBtn.addEventListener('click', resetView);
+
+  stage.addEventListener('wheel', function (e) {
+    e.preventDefault();
+    setScale(scale * (e.deltaY < 0 ? 1.15 : 1 / 1.15));
+  }, { passive: false });
+
+  stage.addEventListener('pointerdown', function (e) {
+    stage.setPointerCapture(e.pointerId);
+    pointers[e.pointerId] = { x: e.clientX, y: e.clientY };
+    var ids = Object.keys(pointers);
+    if (ids.length === 1) {
+      dragging = true;
+      stage.classList.add('dragging');
+      dragStart = { x: e.clientX - panX, y: e.clientY - panY };
+    } else if (ids.length === 2) {
+      dragging = false;
+      var pts = ids.map(function (id) { return pointers[id]; });
+      pinchStartDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+      pinchStartScale = scale;
+    }
+  });
+
+  stage.addEventListener('pointermove', function (e) {
+    if (!pointers[e.pointerId]) return;
+    pointers[e.pointerId] = { x: e.clientX, y: e.clientY };
+    var ids = Object.keys(pointers);
+    if (ids.length === 2) {
+      var pts = ids.map(function (id) { return pointers[id]; });
+      var dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+      if (pinchStartDist) setScale(pinchStartScale * (dist / pinchStartDist));
+    } else if (dragging && ids.length === 1) {
+      panX = e.clientX - dragStart.x;
+      panY = e.clientY - dragStart.y;
+      clampPan();
+      applyTransform();
+    }
+  });
+
+  function endPointer(e) {
+    delete pointers[e.pointerId];
+    var ids = Object.keys(pointers);
+    if (ids.length < 2) pinchStartDist = null;
+    if (ids.length === 0) { dragging = false; stage.classList.remove('dragging'); }
+  }
+  stage.addEventListener('pointerup', endPointer);
+  stage.addEventListener('pointercancel', endPointer);
+})();
+
 // El boletín ya está conectado a Kit (antes ConvertKit) — envío normal del
 // formulario. Kit redirige de vuelta aquí con ?suscrito=1 tras confirmarse
 // (configurado en el panel de Kit), y esto muestra el mensaje de gracias.
@@ -541,29 +718,37 @@ if (new URLSearchParams(window.location.search).get('suscrito') === '1') {
 // confirme la próxima parada, edita este objeto únicamente (no hace falta
 // tocar el HTML en ningún otro lado).
 var RUTA_ACTUAL = {
-  anunciada: false,
+  estado: 'por-anunciar',   // 'anunciado' o 'por-anunciar'
   municipio: '',
-  barrios: [],       // ej: ['Bajura', 'Boquerón', 'Pedernales']
-  fecha: '',
-  horaYPunto: ''
+  barrios: [],              // ej: ['Bajura', 'Boquerón', 'Pedernales']
+  fechas: '',                // ej: '27 SEPT → 29 SEPT'
+  hora: '',
+  puntoDeEncuentro: ''
 };
 
 (function renderRuta() {
   var statusEl = document.getElementById('ruta-status');
   var fieldsEl = document.getElementById('ruta-fields');
-  if (!RUTA_ACTUAL.anunciada) {
+  var ctaEl = document.getElementById('ruta-cta');
+
+  if (RUTA_ACTUAL.estado !== 'anunciado') {
     statusEl.innerHTML = 'PRÓXIMA RUTA<br>POR ANUNCIAR';
     fieldsEl.innerHTML =
       '<span class="stop-field">MUNICIPIO</span>' +
       '<span class="stop-field">BARRIOS</span>' +
       '<span class="stop-field">FECHA</span>';
+    ctaEl.innerHTML = '';
     return;
   }
-  statusEl.innerHTML = RUTA_ACTUAL.municipio;
-  fieldsEl.innerHTML =
-    '<span class="stop-field">' + RUTA_ACTUAL.barrios.join(' &rarr; ') + '</span>' +
-    '<span class="stop-field">' + RUTA_ACTUAL.fecha + '</span>' +
-    '<span class="stop-field">' + RUTA_ACTUAL.horaYPunto + '</span>';
+
+  statusEl.textContent = RUTA_ACTUAL.municipio;
+  var fields = '<span class="stop-field">' + RUTA_ACTUAL.barrios.join(' &rarr; ') + '</span>';
+  fields += '<span class="stop-field">' + RUTA_ACTUAL.fechas + '</span>';
+  if (RUTA_ACTUAL.hora || RUTA_ACTUAL.puntoDeEncuentro) {
+    fields += '<span class="stop-field">' + [RUTA_ACTUAL.hora, RUTA_ACTUAL.puntoDeEncuentro].filter(Boolean).join(' &middot; ') + '</span>';
+  }
+  fieldsEl.innerHTML = fields;
+  ctaEl.innerHTML = '<a href="https://www.instagram.com/gaboramospr/" target="_blank" rel="noopener">20 PA\' LA RUTA <span class="arrow">&rarr;</span></a>';
 })();
 
 // Distrito 20 — estado de la gira. Gabo lo actualiza según se completen las
@@ -573,9 +758,15 @@ var completed = 0;
 var RADIUS = 60;
 var CIRC = 2 * Math.PI * RADIUS;
 document.getElementById('counter-big').textContent = completed + '/' + TOTAL;
-var offset = CIRC - (completed / TOTAL) * CIRC;
-document.getElementById('ring-fill').style.strokeDasharray = CIRC.toFixed(2);
-document.getElementById('ring-fill').style.strokeDashoffset = offset.toFixed(2);
+var ringFill = document.getElementById('ring-fill');
+var targetOffset = CIRC - (completed / TOTAL) * CIRC;
+ringFill.style.strokeDasharray = CIRC.toFixed(2);
+ringFill.style.strokeDashoffset = CIRC.toFixed(2); // arranca vacío
+requestAnimationFrame(function () {
+  requestAnimationFrame(function () {
+    ringFill.style.strokeDashoffset = targetOffset.toFixed(2); // anima hasta el % actual
+  });
+});
 </script>
 </body>
 </html>
