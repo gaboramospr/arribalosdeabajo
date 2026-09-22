@@ -163,6 +163,15 @@
   .event-datetime { font-family: var(--display); font-size: 18px; color: var(--cream); margin-top: 10px; letter-spacing: 0.3px; }
   .event-note { font-family: var(--text); font-size: 10.5px; font-weight: 600; letter-spacing: 0.5px; color: var(--muted); margin-top: 12px; text-transform: uppercase; }
 
+  .dates-list { max-width: 460px; margin: 22px auto 0; }
+  .date-item { margin-top: 18px; }
+  .date-item:first-child { margin-top: 0; }
+  .more-dates {
+    background: transparent; border: 1.5px dashed rgba(222,205,180,0.4); border-radius: var(--r-md);
+    padding: 26px 24px; text-align: center;
+  }
+  .more-dates .event-municipio { color: var(--cream); font-size: clamp(1.4rem, 4vw, 2rem); }
+
   .micro-label { font-family: var(--text); font-size: 9px; font-weight: 700; letter-spacing: 2.5px; color: var(--muted-2); margin-bottom: 8px; }
 
   .pueblos-list {
@@ -308,14 +317,41 @@
 </section>
 
 <section id="encuentros" class="wrap alt">
-  <div class="eyebrow">PRÓXIMOS ENCUENTROS</div>
+  <div class="eyebrow">PRÓXIMAS FECHAS</div>
   <h2 class="section-title">ENCUENTROS</h2>
+  <div class="tagline" style="font-size:clamp(1rem,2.4vw,1.4rem);">ARRIBA LOS DE ABAJO<br>HABLANDO CON LA GENTE</div>
   <div class="body-text">Fecha, hora, lugar y detalles de participación de cada encuentro.</div>
-  <div class="event-card">
-    <div class="event-municipio">CABO ROJO</div>
-    <div class="event-venue">Plaza de Recreo &middot; Ramón Emeterio Betances</div>
-    <div class="event-datetime">9 DE OCTUBRE &middot; 6:00 PM</div>
-    <div class="event-note">Trae tu silla.</div>
+
+  <div class="dates-list">
+    <div class="date-item">
+      <div class="event-card">
+        <div class="event-municipio">CABO ROJO</div>
+        <div class="event-datetime">9 DE OCTUBRE &middot; 6:00 PM</div>
+        <div class="event-venue">Plaza de Recreo Ramón Emeterio Betances</div>
+        <div class="event-note">*Trae tu silla.</div>
+      </div>
+    </div>
+    <div class="date-item">
+      <div class="event-card">
+        <div class="event-municipio">MAYAGÜEZ</div>
+        <div class="event-datetime">13 DE NOVIEMBRE &middot; 6:00 PM</div>
+        <div class="event-venue">Plaza Cristóbal Colón</div>
+        <div class="event-note">*Trae tu silla.</div>
+      </div>
+    </div>
+    <div class="date-item">
+      <div class="event-card">
+        <div class="event-municipio">SAN GERMÁN</div>
+        <div class="event-datetime">11 DE DICIEMBRE &middot; 6:00 PM</div>
+        <div class="event-venue">Plaza Francisco Mariano Quiñones</div>
+        <div class="event-note">*Trae tu silla.</div>
+      </div>
+    </div>
+    <div class="date-item">
+      <div class="more-dates">
+        <div class="event-municipio">MÁS FECHAS<br>POR ANUNCIAR</div>
+      </div>
+    </div>
   </div>
 
   <div class="eyebrow" style="margin-top:44px;">ENCUENTROS REALIZADOS</div>
