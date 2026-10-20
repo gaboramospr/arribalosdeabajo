@@ -131,9 +131,10 @@
   .hero-photo-frame {
     width: 460px; flex-shrink: 0; margin: -95px 0 0 -60px; position: relative; z-index: 1; padding: 10px;
   }
-  .hero-photo-frame::before, .hero-photo-frame::after { content: ""; position: absolute; width: 30px; height: 30px; border: 2px solid var(--lime); z-index: 2; }
-  .hero-photo-frame::before { top: 0; left: 0; border-right: none; border-bottom: none; }
-  .hero-photo-frame::after { bottom: 0; right: 0; border-left: none; border-top: none; }
+  .hero-photo-frame::before, .hero-photo-frame::after,
+  .event-photo-frame::before, .event-photo-frame::after { content: ""; position: absolute; width: 30px; height: 30px; border: 2px solid var(--lime); z-index: 2; }
+  .hero-photo-frame::before, .event-photo-frame::before { top: 0; left: 0; border-right: none; border-bottom: none; }
+  .hero-photo-frame::after, .event-photo-frame::after { bottom: 0; right: 0; border-left: none; border-top: none; }
   .hero-photo-frame img { width: 100%; height: auto; display: block; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.45)); }
 
   .tagline { font-family: var(--display); font-size: clamp(1.25rem, 3vw, 1.9rem); color: var(--cream); margin-top: 16px; letter-spacing: 0.2px; max-width: 480px; margin-left: auto; margin-right: auto; line-height: 1.25; text-transform: uppercase; }
@@ -171,6 +172,27 @@
     padding: 26px 24px; text-align: center;
   }
   .more-dates .event-municipio { color: var(--cream); font-size: clamp(1.4rem, 4vw, 2rem); }
+
+  /* Encuentro completado: el checkmark se dibuja una sola vez al entrar en pantalla */
+  .event-municipio-text { position: relative; display: inline-block; }
+  .check-badge {
+    position: absolute; left: 100%; top: 50%; margin-left: 12px; transform: translateY(-50%);
+    width: 28px; height: 28px; border: 1.5px solid var(--lime); border-radius: var(--r-sm);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.25s ease;
+  }
+  .check-badge svg { width: 18px; height: 18px; }
+  .check-badge path { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 0.55s ease-out 0.2s; }
+  .check-badge.is-done { opacity: 1; }
+  .check-badge.is-done path { stroke-dashoffset: 0; }
+
+  /* Encuentros realizados */
+  .event-photo { max-width: 720px; margin: 24px auto 0; }
+  .event-photo-frame { position: relative; padding: 10px; }
+  .event-photo-frame img { display: block; width: 100%; height: auto; }
+  .event-photo figcaption { margin-top: 14px; text-align: center; }
+  .event-photo-title { display: block; font-family: var(--display); font-size: 1.4rem; line-height: 1; color: var(--cream); text-transform: uppercase; }
+  .event-photo-meta { display: block; font-family: var(--text); font-size: 11px; letter-spacing: 0.3px; color: var(--muted); margin-top: 8px; }
 
   .micro-label { font-family: var(--text); font-size: 9px; font-weight: 700; letter-spacing: 2.5px; color: var(--muted-2); margin-bottom: 8px; }
 
@@ -261,6 +283,7 @@
     #back-to-top svg { width: 15px; height: 15px; }
   }
 </style>
+<noscript><style>.check-badge{opacity:1}.check-badge path{stroke-dashoffset:0}</style></noscript>
 </head>
 <body>
 
@@ -325,7 +348,7 @@
   <div class="dates-list">
     <div class="date-item">
       <div class="event-card">
-        <div class="event-municipio">CABO ROJO</div>
+        <div class="event-municipio"><span class="event-municipio-text">CABO ROJO<span class="check-badge" id="check-cabo-rojo" role="img" aria-label="Encuentro realizado"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path pathLength="1" d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></span></div>
         <div class="event-datetime">9 DE OCTUBRE &middot; 6:00 PM</div>
         <div class="event-venue">Plaza de Recreo Ramón Emeterio Betances</div>
         <div class="event-note">*Trae tu silla.</div>
@@ -355,8 +378,17 @@
   </div>
 
   <div class="eyebrow" style="margin-top:44px;">ENCUENTROS REALIZADOS</div>
-  <div class="body-text" style="margin-top:6px;">Fotos, videos y reseñas de cada encuentro, una vez tengamos el primero.</div>
-  <div class="empty-box">Todavía no hay encuentros realizados que mostrar.</div>
+  <div class="body-text" style="margin-top:6px;">Fotos, videos y reseñas de cada encuentro.</div>
+
+  <figure class="event-photo">
+    <div class="event-photo-frame">
+      <img src="encuentro-cabo-rojo.webp" alt="Foto grupal del encuentro de Arriba los de Abajo en Cabo Rojo, frente a la tarima de la Plaza de Recreo Ramón Emeterio Betances." width="1600" height="1280" loading="lazy">
+    </div>
+    <figcaption>
+      <span class="event-photo-title">CABO ROJO</span>
+      <span class="event-photo-meta">9 DE OCTUBRE &middot; Plaza de Recreo Ramón Emeterio Betances</span>
+    </figcaption>
+  </figure>
 </section>
 
 <section id="proyectos" class="wrap">
@@ -537,6 +569,21 @@ document.getElementById('contact-form').addEventListener('submit', function (e) 
       note.style.display = 'block';
     });
 });
+
+// Checkmark de "encuentro realizado": se dibuja una sola vez cuando entra en pantalla.
+(function () {
+  var badge = document.getElementById('check-cabo-rojo');
+  if (!badge) return;
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function reveal() { badge.classList.add('is-done'); }
+  if (reduceMotion || !('IntersectionObserver' in window)) { reveal(); return; }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) { reveal(); io.unobserve(entry.target); }
+    });
+  }, { threshold: 0.6 });
+  io.observe(badge);
+})();
 
 document.getElementById('back-to-top').addEventListener('click', function () {
   window.scrollTo({ top: 0, behavior: 'smooth' });
