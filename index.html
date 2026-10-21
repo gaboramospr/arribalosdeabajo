@@ -284,7 +284,29 @@
   #back-to-top svg { width: 16px; height: 16px; }
   #back-to-top:hover, #back-to-top:focus-visible { opacity: 1; }
 
+  /* Reproductor de radio (TuneIn): esquina superior derecha, justo debajo del menú.
+     Queda por debajo del encabezado (z-index 20) para que el menú móvil abierto lo cubra. */
+  .radio-widget {
+    position: fixed; top: 71px; right: 16px; z-index: 19; width: min(320px, calc(100vw - 24px));
+    background: var(--card); border: 1.5px solid var(--lime); border-radius: var(--r-md);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+  }
+  .radio-widget[hidden], .radio-body[hidden] { display: none; }
+  .radio-widget.is-collapsed { width: auto; }
+  .radio-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 14px; width: 100%;
+    padding: 10px 12px; background: transparent; border: 0; cursor: pointer; color: var(--lime);
+    font-family: var(--text); font-size: 10.5px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  }
+  .radio-label { display: inline-flex; align-items: center; gap: 9px; }
+  .radio-dot { width: 8px; height: 8px; background: var(--lime); border-radius: 1px; flex-shrink: 0; }
+  .radio-toggle { font-family: var(--display); font-size: 18px; line-height: 1; }
+  .radio-body { padding: 0 10px 10px; }
+  .radio-body iframe { display: block; width: 100%; height: 100px; border: 0; }
+  .radio-body .tag { display: block; margin-top: 8px; text-align: center; }
+
   @media (max-width: 760px) {
+    .radio-widget { top: 63px; right: 12px; }
     .wrap { padding-left: 18px; padding-right: 18px; }
     nav { padding: 14px 18px; }
     .desktop-tabs { display: none; }
@@ -545,6 +567,17 @@
   <div class="accent">GABORAMOSPR.COM</div>
 </footer>
 
+<aside id="radio-widget" class="radio-widget" aria-label="Escucha el programa de radio" hidden>
+  <button type="button" id="radio-head" class="radio-head" aria-expanded="false" aria-controls="radio-body">
+    <span class="radio-label"><span class="radio-dot" aria-hidden="true"></span>ESCUCHA AHORA</span>
+    <span class="radio-toggle" aria-hidden="true">+</span>
+  </button>
+  <div id="radio-body" class="radio-body" hidden>
+    <iframe id="radio-frame" title="Reproductor de TuneIn" data-src="https://tunein.com/embed/player/s30221/" scrolling="no"></iframe>
+    <a href="http://tun.in/seqXv" target="_blank" rel="noopener" class="tag">ABRIR EN TUNEIN &#8599;&#xFE0E;</a>
+  </div>
+</aside>
+
 <button id="back-to-top" type="button" aria-label="Volver arriba">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
 </button>
@@ -601,6 +634,60 @@ document.getElementById('contact-form').addEventListener('submit', function (e) 
       note.style.display = 'block';
     });
 });
+
+// Reproductor de radio: aparece solo los viernes de 2:30 a 4:30 PM (hora de Puerto Rico), a partir
+// del viernes 6 de noviembre de 2026. Para verlo antes: agrega ?radio=preview a la dirección.
+(function () {
+  var widget = document.getElementById('radio-widget');
+  if (!widget) return;
+  var head = document.getElementById('radio-head');
+  var body = document.getElementById('radio-body');
+  var frame = document.getElementById('radio-frame');
+  var toggle = head.querySelector('.radio-toggle');
+
+  var START_DATE = 20261106;      // AAAAMMDD, hora de Puerto Rico
+  var OPEN_MIN = 14 * 60 + 30;    // 2:30 PM
+  var CLOSE_MIN = 16 * 60 + 30;   // 4:30 PM (ya no se muestra a partir de esta hora)
+  var FRIDAY = 5;
+
+  // Puerto Rico está en UTC-4 todo el año (no usa horario de verano), así que no depende
+  // de la zona horaria del visitante.
+  function inWindow(nowMs) {
+    var pr = new Date(nowMs - 4 * 60 * 60 * 1000);
+    var ymd = pr.getUTCFullYear() * 10000 + (pr.getUTCMonth() + 1) * 100 + pr.getUTCDate();
+    var min = pr.getUTCHours() * 60 + pr.getUTCMinutes();
+    return ymd >= START_DATE && pr.getUTCDay() === FRIDAY && min >= OPEN_MIN && min < CLOSE_MIN;
+  }
+
+  function setExpanded(open) {
+    head.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggle.textContent = open ? '\u2212' : '+';
+    body.hidden = !open;
+    widget.classList.toggle('is-collapsed', !open);
+    // El reproductor de TuneIn solo se descarga la primera vez que se abre.
+    if (open && !frame.getAttribute('src')) frame.setAttribute('src', frame.getAttribute('data-src'));
+  }
+
+  var shown = false;
+  var timer = null;
+  function check(force) {
+    if (shown) return;
+    if (!force && !inWindow(Date.now())) return;
+    shown = true;
+    widget.hidden = false;
+    // Abierta en pantallas anchas; minimizada en las angostas para no tapar el contenido.
+    setExpanded(window.matchMedia('(min-width: 1280px)').matches);
+    if (timer) clearInterval(timer);
+  }
+
+  head.addEventListener('click', function () { setExpanded(body.hidden); });
+
+  // Una vez que aparece, se queda hasta que se recargue la página, para no cortar el audio a quien
+  // siga escuchando después de las 4:30. Si el visitante entra antes de las 2:30, aparece sola.
+  if (/[?&]radio=preview\b/.test(window.location.search)) { check(true); return; }
+  timer = setInterval(check, 30000);
+  check();
+})();
 
 // Video recap: el script de Instagram solo se descarga cuando el visitante se acerca a esta parte.
 (function () {
