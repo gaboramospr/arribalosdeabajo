@@ -203,8 +203,13 @@
     font-size: 12px; text-decoration: none; text-align: center; transition: border-color 0.2s, color 0.2s;
   }
   .event-video-embed blockquote.instagram-media a:hover { border-color: var(--lime); color: var(--lime); }
-  /* Instagram fija un ancho mínimo de 326px; en pantallas muy angostas eso se saldría del margen */
-  .event-video-embed iframe { min-width: 0 !important; max-width: 100% !important; }
+  /* Instagram le pone al iframe sus propios márgenes y ancho (incluido un mínimo de 326px). Aquí se
+     fuerza que ocupe todo el ancho disponible, sin pasarse de 540px, y siempre centrado. */
+  .event-video-embed { display: flex; flex-direction: column; align-items: center; }
+  .event-video-embed iframe {
+    display: block !important; margin: 0 auto !important;
+    width: 100% !important; max-width: 540px !important; min-width: 0 !important;
+  }
   .event-video figcaption { margin-top: 14px; text-align: center; }
   .event-video .tag { display: inline-block; margin-top: 12px; }
 
@@ -406,7 +411,7 @@
 
   <figure class="event-video">
     <div class="event-video-embed" id="recap-embed">
-      <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DeX2zBQvohT/" data-instgrm-version="14">
+      <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DeX2zBQvohT/" data-instgrm-version="14" style="margin:0 auto; max-width:540px; width:100%;">
         <a href="https://www.instagram.com/reel/DeX2zBQvohT/" target="_blank" rel="noopener">Video recap en Instagram</a>
       </blockquote>
     </div>
