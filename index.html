@@ -92,6 +92,7 @@
   }
   .logo { font-family: var(--display); font-size: 21px; color: var(--lime); letter-spacing: 0.5px; text-decoration: none; }
   .desktop-tabs { display: flex; gap: 22px; font-size: 11px; font-weight: 600; letter-spacing: 0.6px; font-family: var(--text); }
+  @media (min-width: 761px) and (max-width: 980px) { .desktop-tabs { gap: 13px; letter-spacing: 0.3px; } nav { padding-left: 24px; padding-right: 24px; } }
   .desktop-tabs a { color: var(--muted); padding-bottom: 4px; border-bottom: 2px solid transparent; text-decoration: none; transition: color 0.2s, border-color 0.2s; }
   .desktop-tabs a:hover { color: var(--lime); border-bottom-color: var(--lime); }
   .hamburger {
@@ -335,6 +336,7 @@
       <div class="desktop-tabs">
         <a href="#la-gira">LA GIRA</a>
         <a href="#encuentros">ENCUENTROS</a>
+        <a href="#podcast">PODCAST</a>
         <a href="#proyectos">PROYECTOS Y ENLACES</a>
         <a href="#sobre-mi">SOBRE MÍ</a>
         <a href="#contacto">CONTACTO</a>
@@ -348,6 +350,7 @@
     <div id="mobile-menu-inner" class="wrap">
       <a href="#la-gira">LA GIRA</a>
       <a href="#encuentros">ENCUENTROS</a>
+      <a href="#podcast">PODCAST</a>
       <a href="#proyectos">PROYECTOS Y ENLACES</a>
       <a href="#sobre-mi">SOBRE MÍ</a>
       <a href="#contacto">CONTACTO</a>
@@ -455,7 +458,18 @@
   </figure>
 </section>
 
-<section id="proyectos" class="wrap">
+<section id="podcast" class="wrap">
+  <div class="eyebrow">PODCAST</div>
+  <h2 class="section-title lime">LA<br>CONTRAPARTE</h2>
+  <div class="body-text" style="max-width:520px;">Análisis y conversación sobre Puerto Rico, con mirada desde el oeste y el suroeste. Conducido por Gabo Ramos.</div>
+  <div class="body-text" style="max-width:520px;">En vivo los viernes de 3:00 a 4:00 p. m. por WKJB 710 AM (Mayagüez), en Facebook y en YouTube. La versión en podcast se publica los sábados.</div>
+  <div class="btn-row">
+    <a href="https://open.spotify.com/show/3tkRhtRAzgs1FdjSZR0HGR" target="_blank" rel="noopener" class="btn-primary">Escuchar en Spotify <span class="arrow">&#8599;&#xFE0E;</span></a>
+    <a href="https://podcasts.apple.com/us/podcast/la-contraparte/id6831224870" target="_blank" rel="noopener" class="btn-outline">Escuchar en Apple Podcasts <span class="arrow">&#8599;&#xFE0E;</span></a>
+  </div>
+</section>
+
+<section id="proyectos" class="wrap alt">
   <div class="eyebrow">PROYECTOS Y ENLACES</div>
   <h2 class="section-title">TODO EN<br>UN LUGAR</h2>
   <div class="body-text">Mis proyectos, contenido y redes, todos aquí.</div>
@@ -494,7 +508,7 @@
 
 <div class="stripe"></div>
 
-<section id="sobre-mi" class="wrap alt">
+<section id="sobre-mi" class="wrap">
   <div class="micro-label">SOBRE MÍ</div>
   <h2 class="section-title lime">SOY GABO RAMOS</h2>
   <div class="bio-wrap">
@@ -516,7 +530,7 @@
   </div>
 </section>
 
-<section id="contacto" class="wrap">
+<section id="contacto" class="wrap alt">
   <div class="eyebrow">HABLEMOS</div>
   <h2 class="section-title">ENVÍA UN MENSAJE</h2>
   <div class="body-text">Puedes utilizar este espacio para enviar una pregunta, una observación o una solicitud de contacto. Describe brevemente el asunto e incluye tu nombre y correo electrónico para que pueda responderte.</div>
@@ -553,7 +567,7 @@
   </div>
 </section>
 
-<section id="newsletter" class="wrap alt">
+<section id="newsletter" class="wrap">
   <div class="eyebrow">NO TE PIERDAS NADA</div>
   <h2 class="section-title">BOLETÍN</h2>
   <div class="body-text">Recibe por correo las novedades que se publiquen en esta página.</div>
