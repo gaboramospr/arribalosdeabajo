@@ -397,7 +397,7 @@
     </div>
     <div class="date-item">
       <div class="event-card">
-        <div class="event-municipio">MAYAGÜEZ</div>
+        <div class="event-municipio"><span class="event-municipio-text">MAYAGÜEZ<span class="check-badge" id="check-mayaguez" role="img" aria-label="Encuentro realizado"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path pathLength="1" d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></span></div>
         <div class="event-datetime">13 DE NOVIEMBRE &middot; 6:00 PM</div>
         <div class="event-venue">Plaza Cristóbal Colón</div>
         <div class="event-note">*Trae tu silla.</div>
@@ -406,7 +406,7 @@
     <div class="date-item">
       <div class="event-card">
         <div class="event-municipio">SAN GERMÁN</div>
-        <div class="event-datetime">11 DE DICIEMBRE &middot; 6:00 PM</div>
+        <div class="event-datetime">10 DE DICIEMBRE &middot; 6:00 PM</div>
         <div class="event-venue">Plaza Francisco Mariano Quiñones</div>
         <div class="event-note">*Trae tu silla.</div>
       </div>
@@ -441,6 +441,16 @@
       <span class="event-photo-title">VIDEO RECAP</span>
       <span class="event-photo-meta">CABO ROJO &middot; 9 DE OCTUBRE</span>
       <a href="https://www.instagram.com/reel/DeX2zBQvohT/" target="_blank" rel="noopener" class="tag">VER EN INSTAGRAM &#8599;&#xFE0E;</a>
+    </figcaption>
+  </figure>
+
+  <figure class="event-photo">
+    <div class="event-photo-frame">
+      <img src="encuentro-mayaguez.webp" alt="Foto grupal del encuentro de Arriba los de Abajo en Mayagüez, frente a la Plaza Cristóbal Colón." width="1600" height="960" loading="lazy">
+    </div>
+    <figcaption>
+      <span class="event-photo-title">MAYAGÜEZ</span>
+      <span class="event-photo-meta">13 DE NOVIEMBRE &middot; Plaza Cristóbal Colón</span>
     </figcaption>
   </figure>
 </section>
@@ -716,17 +726,17 @@ document.getElementById('contact-form').addEventListener('submit', function (e) 
 
 // Checkmark de "encuentro realizado": se dibuja una sola vez cuando entra en pantalla.
 (function () {
-  var badge = document.getElementById('check-cabo-rojo');
-  if (!badge) return;
+  var badges = [document.getElementById('check-cabo-rojo'), document.getElementById('check-mayaguez')].filter(Boolean);
+  if (!badges.length) return;
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function reveal() { badge.classList.add('is-done'); }
-  if (reduceMotion || !('IntersectionObserver' in window)) { reveal(); return; }
+  function reveal(el) { el.classList.add('is-done'); }
+  if (reduceMotion || !('IntersectionObserver' in window)) { badges.forEach(reveal); return; }
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
-      if (entry.isIntersecting) { reveal(); io.unobserve(entry.target); }
+      if (entry.isIntersecting) { reveal(entry.target); io.unobserve(entry.target); }
     });
   }, { threshold: 0.6 });
-  io.observe(badge);
+  badges.forEach(function (b) { io.observe(b); });
 })();
 
 document.getElementById('back-to-top').addEventListener('click', function () {
