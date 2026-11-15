@@ -456,6 +456,19 @@
       <span class="event-photo-meta">13 DE NOVIEMBRE &middot; Plaza Cristóbal Colón</span>
     </figcaption>
   </figure>
+
+  <figure class="event-video">
+    <div class="event-video-embed" id="recap-embed-mayaguez">
+      <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DfxD4ImvmQ5/" data-instgrm-version="14" style="margin:0 auto; max-width:540px; width:100%;">
+        <a href="https://www.instagram.com/reel/DfxD4ImvmQ5/" target="_blank" rel="noopener">Video recap en Instagram</a>
+      </blockquote>
+    </div>
+    <figcaption>
+      <span class="event-photo-title">VIDEO RECAP</span>
+      <span class="event-photo-meta">MAYAGÜEZ &middot; 13 DE NOVIEMBRE</span>
+      <a href="https://www.instagram.com/reel/DfxD4ImvmQ5/" target="_blank" rel="noopener" class="tag">VER EN INSTAGRAM &#8599;&#xFE0E;</a>
+    </figcaption>
+  </figure>
 </section>
 
 <section id="podcast" class="wrap">
@@ -715,7 +728,8 @@ document.getElementById('contact-form').addEventListener('submit', function (e) 
 
 // Video recap: el script de Instagram solo se descarga cuando el visitante se acerca a esta parte.
 (function () {
-  var holder = document.getElementById('recap-embed');
+  var holders = document.querySelectorAll('.event-video-embed');
+  var holder = holders[0];
   if (!holder) return;
   var loaded = false;
   function loadEmbed() {
@@ -735,7 +749,7 @@ document.getElementById('contact-form').addEventListener('submit', function (e) 
       if (entry.isIntersecting) { loadEmbed(); io.disconnect(); }
     });
   }, { rootMargin: '600px 0px' });
-  io.observe(holder);
+  holders.forEach(function (h) { io.observe(h); });
 })();
 
 // Checkmark de "encuentro realizado": se dibuja una sola vez cuando entra en pantalla.
