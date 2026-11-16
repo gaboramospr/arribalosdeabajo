@@ -90,18 +90,22 @@
     padding: 18px 32px; border-bottom: 1px solid var(--line);
     background: rgba(1,36,34,0.94); backdrop-filter: blur(6px);
   }
-  .logo { font-family: var(--display); font-size: 21px; color: var(--lime); letter-spacing: 0.5px; text-decoration: none; }
+  nav .wrap { max-width: 1240px; }
+  .logo { white-space: nowrap; font-family: var(--display); font-size: 21px; color: var(--lime); letter-spacing: 0.5px; text-decoration: none; }
   .desktop-tabs { display: flex; gap: 22px; font-size: 11px; font-weight: 600; letter-spacing: 0.6px; font-family: var(--text); }
-  @media (min-width: 761px) and (max-width: 980px) { .desktop-tabs { gap: 13px; letter-spacing: 0.3px; } nav { padding-left: 24px; padding-right: 24px; } }
-  .desktop-tabs a { color: var(--muted); padding-bottom: 4px; border-bottom: 2px solid transparent; text-decoration: none; transition: color 0.2s, border-color 0.2s; }
+  @media (min-width: 1101px) and (max-width: 1240px) { .desktop-tabs { gap: 14px; letter-spacing: 0.4px; } }
+  .desktop-tabs a { white-space: nowrap; color: var(--muted); padding-bottom: 4px; border-bottom: 2px solid transparent; text-decoration: none; transition: color 0.2s, border-color 0.2s; }
   .desktop-tabs a:hover { color: var(--lime); border-bottom-color: var(--lime); }
+  .desktop-tabs a.tab-cta { color: var(--bg); background: var(--lime); border: 1.5px solid var(--lime); border-radius: var(--r-sm); padding: 6px 11px; margin: -6px 0 -2px; font-weight: 700; white-space: nowrap; }
+  .desktop-tabs a.tab-cta:hover { background: transparent; color: var(--lime); border-color: var(--lime); }
+  #mobile-menu a.tab-cta { color: var(--lime); font-weight: 700; }
   .hamburger {
     display: none; width: 24px; height: 17px; flex-direction: column; justify-content: space-between;
     cursor: pointer; background: none; border: none; padding: 0;
   }
   .hamburger span { height: 2px; background: var(--cream); border-radius: 1px; }
   #mobile-menu { max-height: 0; overflow: hidden; background: var(--card); border-bottom: 1px solid var(--line); transition: max-height 0.3s ease; }
-  #mobile-menu.open { max-height: 360px; }
+  #mobile-menu.open { max-height: 440px; }
   #mobile-menu-inner { padding-top: 8px; padding-bottom: 14px; }
   #mobile-menu a { display: block; padding: 12px 14px; font-size: 13px; font-weight: 600; letter-spacing: 0.4px; text-decoration: none; color: var(--cream); border-top: 1px solid var(--line); transition: color 0.2s; }
   #mobile-menu a:first-child { border-top: none; }
@@ -306,6 +310,11 @@
   .radio-body iframe { display: block; width: 100%; height: 100px; border: 0; }
   .radio-body .tag { display: block; margin-top: 8px; text-align: center; }
 
+  @media (max-width: 1100px) {
+    .desktop-tabs { display: none; }
+    .hamburger { display: flex; }
+    nav { padding-left: 24px; padding-right: 24px; }
+  }
   @media (max-width: 760px) {
     .radio-widget { top: 63px; right: 12px; }
     .wrap { padding-left: 18px; padding-right: 18px; }
@@ -340,6 +349,7 @@
         <a href="#proyectos">PROYECTOS Y ENLACES</a>
         <a href="#sobre-mi">SOBRE MÍ</a>
         <a href="#contacto">CONTACTO</a>
+        <a href="https://chat.whatsapp.com/JEf9ASqbdWu7z1YXSRXKu7" target="_blank" rel="noopener noreferrer" class="tab-cta" aria-label="Únete a nuestra comunidad (se abre en WhatsApp)">ÚNETE A NUESTRA COMUNIDAD <span class="arrow">&#8599;&#xFE0E;</span></a>
       </div>
       <button class="hamburger" id="hamburger" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Abrir menú">
         <span></span><span></span><span></span>
@@ -354,6 +364,7 @@
       <a href="#proyectos">PROYECTOS Y ENLACES</a>
       <a href="#sobre-mi">SOBRE MÍ</a>
       <a href="#contacto">CONTACTO</a>
+      <a href="https://chat.whatsapp.com/JEf9ASqbdWu7z1YXSRXKu7" target="_blank" rel="noopener noreferrer" class="tab-cta" aria-label="Únete a nuestra comunidad (se abre en WhatsApp)">ÚNETE A NUESTRA COMUNIDAD <span class="arrow">&#8599;&#xFE0E;</span></a>
     </div>
   </div>
 </header>
