@@ -213,6 +213,18 @@
   .spotify-player { max-width: 520px; margin: 14px auto 0; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--card); }
   .spotify-player iframe { display: block; width: 100%; height: 152px; border: 0; }
   .spotify-label { max-width: 520px; margin: 26px auto 0; }
+  /* Ventana emergente del boletín */
+  #nl-pop { position: fixed; inset: 0; z-index: 300; display: none; align-items: center; justify-content: center; padding: 18px; background: rgba(1,36,34,0.82); }
+  #nl-pop.open { display: flex; animation: nlFade 0.25s ease; }
+  .nl-card { position: relative; width: 100%; max-width: 440px; max-height: 94vh; overflow-y: auto; background: var(--card); border: 2px solid var(--lime); border-radius: var(--r-md, 3px); padding: 34px 26px 24px; text-align: center; box-shadow: 0 18px 50px rgba(0,0,0,0.45); }
+  .nl-card::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 8px; background: repeating-linear-gradient(135deg, var(--lime) 0 10px, var(--bg) 10px 20px); }
+  .nl-close { position: absolute; top: 14px; right: 8px; width: 40px; height: 40px; background: none; border: 0; color: var(--cream); font-size: 26px; line-height: 1; cursor: pointer; }
+  .nl-close:hover, .nl-close:focus-visible { color: var(--lime); }
+  .nl-card h2 { font-family: var(--display); font-weight: 400; font-size: 44px; line-height: 0.98; color: var(--lime); text-transform: uppercase; margin: 8px 0 14px; }
+  .nl-card p { font-family: var(--text); font-size: 13.5px; line-height: 1.65; color: var(--cream); margin: 0 0 18px; }
+  .nl-skip { display: block; margin: 12px auto 0; background: none; border: 0; color: var(--muted); font-family: var(--text); font-size: 11px; text-decoration: underline; cursor: pointer; }
+  @keyframes nlFade { from { opacity: 0; } to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { #nl-pop.open { animation: none; } }
   .event-video-embed { display: flex; flex-direction: column; align-items: center; }
   .event-video-embed iframe {
     display: block !important; margin: 0 auto !important;
@@ -637,6 +649,17 @@
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
 </button>
 
+<div id="nl-pop" role="dialog" aria-modal="true" aria-labelledby="nl-title" aria-hidden="true">
+  <div class="nl-card">
+    <button type="button" class="nl-close" id="nl-close" aria-label="Cerrar">&times;</button>
+    <div class="eyebrow">NO TE PIERDAS NADA</div>
+    <h2 id="nl-title">ENTÉRATE<br>PRIMERO</h2>
+    <p>Únete a nuestra comunidad de WhatsApp y recibe las próximas fechas de la gira, lo que dice la gente en cada pueblo y avisos de LA CONTRAPARTE.</p>
+    <a href="https://chat.whatsapp.com/JEf9ASqbdWu7z1YXSRXKu7" target="_blank" rel="noopener noreferrer" class="btn-primary" id="nl-join" style="display:block;">Unirme a la comunidad <span class="arrow">&#8599;&#xFE0E;</span></a>
+    <button type="button" class="nl-skip" id="nl-skip">Ahora no</button>
+  </div>
+</div>
+
 <script>
 var hamburger = document.getElementById('hamburger');
 var mobileMenu = document.getElementById('mobile-menu');
@@ -798,6 +821,61 @@ if (new URLSearchParams(window.location.search).get('suscrito') === '1') {
   var cleanUrl = window.location.pathname + window.location.hash;
   window.history.replaceState({}, '', cleanUrl);
 }
+
+// Ventana emergente de la comunidad de WhatsApp: aparece a los 12 s o al bajar
+// ~45% de la página (lo que ocurra primero), una sola vez por visitante. Si la
+// cierran no vuelve por 14 días; si tocan "Unirme", no vuelve. Vista previa: ?popup=preview
+(function () {
+  var pop = document.getElementById('nl-pop');
+  if (!pop) return;
+  var KEY = 'waPopV1', DAYS = 14, preview = /[?&]popup=preview/.test(location.search);
+  function read() { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } }
+  function write(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} }
+  var st = read();
+  if (!preview) {
+    if (st && st.done) return;
+    if (st && st.until && Date.now() < st.until) return;
+  }
+  var shown = false, lastFocus = null;
+  function show() {
+    if (shown) return;
+    if (document.getElementById('mobile-menu').classList.contains('open')) { setTimeout(show, 4000); return; }
+    shown = true;
+    lastFocus = document.activeElement;
+    pop.classList.add('open'); pop.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    setTimeout(function () { document.getElementById('nl-join').focus(); }, 60);
+    window.removeEventListener('scroll', onScroll);
+  }
+  function hide(remember) {
+    pop.classList.remove('open'); pop.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (remember && !preview) write({ until: Date.now() + DAYS * 864e5 });
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  function onScroll() {
+    var h = document.documentElement.scrollHeight - innerHeight;
+    if (h > 0 && window.scrollY / h > 0.45) show();
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  setTimeout(show, preview ? 600 : 12000);
+  document.getElementById('nl-close').addEventListener('click', function () { hide(true); });
+  document.getElementById('nl-skip').addEventListener('click', function () { hide(true); });
+  document.getElementById('nl-join').addEventListener('click', function () {
+    if (!preview) write({ done: true });
+    hide(false);
+  });
+  pop.addEventListener('click', function (e) { if (e.target === pop) hide(true); });
+  document.addEventListener('keydown', function (e) {
+    if (!pop.classList.contains('open')) return;
+    if (e.key === 'Escape') { hide(true); return; }
+    if (e.key === 'Tab') {
+      var f = pop.querySelectorAll('button, a[href]'), first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+})();
 </script>
 </body>
 </html>
