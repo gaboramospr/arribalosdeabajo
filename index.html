@@ -210,6 +210,9 @@
   .event-video-embed blockquote.instagram-media a:hover { border-color: var(--lime); color: var(--lime); }
   /* Instagram le pone al iframe sus propios márgenes y ancho (incluido un mínimo de 326px). Aquí se
      fuerza que ocupe todo el ancho disponible, sin pasarse de 540px, y siempre centrado. */
+  .spotify-player { max-width: 520px; margin: 14px auto 0; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--card); }
+  .spotify-player iframe { display: block; width: 100%; height: 152px; border: 0; }
+  .spotify-label { max-width: 520px; margin: 26px auto 0; }
   .event-video-embed { display: flex; flex-direction: column; align-items: center; }
   .event-video-embed iframe {
     display: block !important; margin: 0 auto !important;
@@ -487,6 +490,10 @@
   <h2 class="section-title lime">LA<br>CONTRAPARTE</h2>
   <div class="body-text" style="max-width:520px;">Análisis y conversación sobre Puerto Rico, con mirada desde el oeste y el suroeste. Conducido por Gabo Ramos.</div>
   <div class="body-text" style="max-width:520px;">En vivo los viernes de 3:00 a 4:00 p. m. por WKJB 710 AM (Mayagüez), en Facebook y en YouTube. La versión en podcast se publica los sábados.</div>
+  <div class="eyebrow spotify-label">ÚLTIMO EPISODIO</div>
+  <div class="spotify-player">
+    <iframe title="Reproductor de Spotify: La Contraparte, último episodio" src="https://open.spotify.com/embed/show/3tkRhtRAzgs1FdjSZR0HGR?utm_source=generator&amp;theme=0" width="100%" height="152" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+  </div>
   <div class="btn-row">
     <a href="https://open.spotify.com/show/3tkRhtRAzgs1FdjSZR0HGR" target="_blank" rel="noopener" class="btn-primary">Escuchar en Spotify <span class="arrow">&#8599;&#xFE0E;</span></a>
     <a href="https://podcasts.apple.com/us/podcast/la-contraparte/id6831224870" target="_blank" rel="noopener" class="btn-outline">Escuchar en Apple Podcasts <span class="arrow">&#8599;&#xFE0E;</span></a>
